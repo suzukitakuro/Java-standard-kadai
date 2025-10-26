@@ -1,44 +1,50 @@
 package raisetech.student.management;
 
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
 import org.springframework.web.bind.annotation.*;
-
-import java.util.*;
+import java.util.List;
 
 
 @SpringBootApplication
 @RestController
 public class Application {
 
+    @Autowired
+    private StudentRepository repository;
 
-    private final Map<String, Integer> dnamemberinfo = new HashMap<>();
-
-    {
-        dnamemberinfo.put("蛯名", 28);
-        dnamemberinfo.put("牧", 27);
-        dnamemberinfo.put("筒香", 34);
-        dnamemberinfo.put("宮崎", 36);
-        dnamemberinfo.put("オースティン", 34);
-        dnamemberinfo.put("佐野", 31);
-        dnamemberinfo.put("ジャクソン", 29);
-        dnamemberinfo.put("山本", 27);
-        dnamemberinfo.put("東", 29);
-    }
 
     public static void main(String[] args) {
 
         SpringApplication.run(Application.class, args);
     }
-    @GetMapping("/dnamemberinfo")
-    public Map<String, Integer> getdnamemberinfo() {
-        return dnamemberinfo;
-    }
 
-    @PostMapping("/dnamemberinfo")
-    public void setdnamemberinfo(@RequestBody Map<String, Integer> newmember) {
-        dnamemberinfo.putAll(newmember);
+    @GetMapping("/student")
+    public String getStudent(@RequestParam String name) {
+        Student student = repository.searchByName(name);
+        return student.getName() + " " + student.getAge() + "歳";
     }
 
 
+    @PostMapping("/student")
+    public void registorStudent(String name, int age) {
+        repository.registerStudent(name, age);
+    }
+
+    @PatchMapping("/student")
+    public void UpdatestudentName(String name, int age) {
+        repository.updataStudent(name, age);
+    }
+
+    @DeleteMapping("/student")
+    public void deletestudent(String name) {
+        repository.deleteStudent(name);
+
+    }
+
+    @GetMapping("/information")
+    public List<Student> getAllStudents() {
+        return repository.getAllStudents();
+    }
 }
