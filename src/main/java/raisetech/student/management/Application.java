@@ -1,37 +1,50 @@
 package raisetech.student.management;
 
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
+import java.util.List;
+
 
 @SpringBootApplication
 @RestController
 public class Application {
 
-    private String name = "suzuki";
-    private String age = "29";
+    @Autowired
+    private StudentRepository repository;
+
 
     public static void main(String[] args) {
 
         SpringApplication.run(Application.class, args);
     }
 
-    @GetMapping("/studentinfo")
-    public String getstudentinfo() {
-        return name+""+age+"歳";
+    @GetMapping("/student")
+    public String getStudent(@RequestParam String name) {
+        Student student = repository.searchByName(name);
+        return student.getName() + " " + student.getAge() + "歳";
     }
 
 
-    @PostMapping("/studentinfo")
-    public void setName(String name,String age) {
-        this.name = name;
-        this.age = age;
+    @PostMapping("/student")
+    public void registorStudent(String name, int age) {
+        repository.registerStudent(name, age);
+    }
+
+    @PatchMapping("/student")
+    public void UpdatestudentName(String name, int age) {
+        repository.updataStudent(name, age);
+    }
+
+    @DeleteMapping("/student")
+    public void deletestudent(String name) {
+        repository.deleteStudent(name);
 
     }
-    @PostMapping("/studentName")
-    public  void UpdatestudentName(String name){
-        this.name = name;
+
+    @GetMapping("/information")
+    public List<Student> getAllStudents() {
+        return repository.getAllStudents();
     }
 }
