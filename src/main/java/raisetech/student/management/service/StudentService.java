@@ -23,7 +23,7 @@ public class StudentService {
     @GetMapping("/studentList")
     public List<Student> searchStudentList() {
         return repository.studentsearch().stream()
-                .filter(s->s.getAge()>=30)
+                .filter(s->s.getAge()>=30&&s.getAge()<=39)
                 .collect(Collectors.toList());
 
     }
