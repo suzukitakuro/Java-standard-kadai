@@ -22,16 +22,12 @@ public class StudentService {
 
     @GetMapping("/studentList")
     public List<Student> searchStudentList() {
-        return repository.studentsearch().stream()
-                .filter(s->s.getAge()>=30&&s.getAge()<=39)
-                .collect(Collectors.toList());
+        return repository.studentsearch();
 
     }
 
     @GetMapping("/student courseList")
     public List<StudentCourse> searchStudentCourseList() {
-        return repository.studentcoursesearch().stream()
-                .filter(s->"Javaコース".equals(s.getCourseName()))
-                .collect(Collectors.toList());
+        return repository.studentcoursesearch();
     }
 }
