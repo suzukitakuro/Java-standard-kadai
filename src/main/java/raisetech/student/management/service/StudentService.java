@@ -8,7 +8,7 @@ import raisetech.student.management.data.StudentCourse;
 import raisetech.student.management.repository.StudentRepository;
 
 import java.util.List;
-import java.util.stream.Collectors;
+
 
 @Service
 public class StudentService {
