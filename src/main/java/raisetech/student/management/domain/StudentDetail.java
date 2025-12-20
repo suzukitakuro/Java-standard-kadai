@@ -5,6 +5,7 @@ import lombok.Setter;
 import raisetech.student.management.data.Student;
 import raisetech.student.management.data.StudentCourse;
 
+import java.util.ArrayList;
 import java.util.List;
 
 @Getter
@@ -12,5 +13,5 @@ import java.util.List;
 public class StudentDetail {
 
     private Student student;
-    private List<StudentCourse> studentCourses;
+    private List<StudentCourse> studentCourses=new ArrayList<>();
 }

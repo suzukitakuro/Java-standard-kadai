@@ -1,4 +1,4 @@
-package raisetech.student.management.contoroller.converter;
+package raisetech.student.management.controller.converter;
 
 import org.springframework.stereotype.Component;
 import raisetech.student.management.data.Student;
