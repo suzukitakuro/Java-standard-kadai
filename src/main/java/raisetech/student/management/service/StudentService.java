@@ -64,9 +64,16 @@ public class StudentService {
 
     @Transactional
     public void updateStudent(StudentDetail studentDetail) {
-        repository.updateStudent(studentDetail.getStudent());
-        for (StudentCourse studentsCourse : studentDetail.getStudentCourses()) {
-            repository.updateStudentsCourses(studentsCourse);
+        Student student = studentDetail.getStudent();
+        repository.updateStudent(student);
+        for (StudentCourse studentCourse : studentDetail.getStudentCourses()) {
+            repository.updateStudentsCourses(studentCourse);
+        }
+        if (student.isDeleted()) { // true のとき削除
+            repository.deleteStudent(student.getId());
+            return;
         }
     }
+
+
 }
