@@ -19,7 +19,7 @@ public interface StudentRepository {
      *
      * @return 全体検索した受講生情報の一覧
      */
-    @Select("SELECT * FROM students ")
+    @Select("SELECT * FROM students WHERE isDeleted = false")
     List<Student> studentsearch();
 
     @Select("SELECT * FROM students WHERE id = #{id}")
@@ -29,18 +29,18 @@ public interface StudentRepository {
     @Select("SELECT * FROM students_courses ")
     List<StudentCourse> studentcoursesearch();
 
+
     @Select("SELECT * FROM students_courses WHERE id = #{id}")
     List<StudentCourse> searchStudentCourse(String studentId);
 
-    @Insert(
-            "INSERT INTO students(name, kanaName, nickname,email,area,age,sex,remark,isDeleted)"
+    @Insert("INSERT INTO students(name, kanaName, nickname,email,area,age,sex,remark,isDeleted)"
             + "VALUES(#{name},#{kanaName},#{nickname},#{email},#{area},#{age},#{sex},#{remark},false)")
     @Options(useGeneratedKeys = true, keyProperty = "id")
     void registerStudent(Student student);
 
     @Insert(
             "INSERT INTO students_courses(courseId, courseName,courseStart,courseEnd)"
-            +"VALUES(#{courseId},#{courseName},#{courseStart},#{courseEnd})"
+                    + "VALUES(#{courseId},#{courseName},#{courseStart},#{courseEnd})"
     )
     void registerStudentCourses(StudentCourse studentCourse);
 
@@ -48,9 +48,11 @@ public interface StudentRepository {
             + " email = #{email}, area = #{area}, age = #{age}, sex = #{sex}, remark = #{remark}, isDeleted = #{isDeleted} WHERE id = #{id}")
     void updateStudent(Student student);
 
-    @Update("UPDATE students_courses SET course_name = #{courseName} WHERE id = #{id}")
-    void  updateStudentsCourses(StudentCourse studentCourse);
+    @Update("UPDATE students_courses SET courseName = #{courseName} WHERE id = #{id}")
+    void updateStudentsCourses(StudentCourse studentCourse);
 
+    @Update("UPDATE students SET isDeleted = true WHERE id = #{id}")
+    void deleteStudent(String id);
 
 
 }
