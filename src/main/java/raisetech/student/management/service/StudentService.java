@@ -64,16 +64,20 @@ public class StudentService {
 
     @Transactional
     public void updateStudent(StudentDetail studentDetail) {
-        Student student = studentDetail.getStudent();
-        repository.updateStudent(student);
-        for (StudentCourse studentCourse : studentDetail.getStudentCourses()) {
-            repository.updateStudentsCourses(studentCourse);
-        }
-        if (student.isDeleted()) { // true のとき削除
-            repository.deleteStudent(student.getId());
+        repository.updateStudent(studentDetail.getStudent());
+        if (studentDetail.getStudent().isDeleted()) { // true のとき削除
+            repository.deleteStudent(studentDetail.getStudent().getId());
             return;
         }
+        for (StudentCourse studentsCourse : studentDetail.getStudentCourses()) {
+            repository.updateStudentsCourses(studentsCourse);
+
+            for (StudentCourse studentCourse : studentDetail.getStudentCourses()) {
+                repository.updateStudentsCourses(studentCourse);
+            }
+
+        }
+
+
     }
-
-
 }
