@@ -57,7 +57,6 @@ public class StudentController {
     public ResponseEntity<String> registerStudent(@RequestBody StudentDetail studentDetail) {
         service.registerStudent(studentDetail);
         return ResponseEntity.ok("登録処理が成功しました");
-
     }
 
     @GetMapping("/studentsCourseList")
