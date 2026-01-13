@@ -1,6 +1,7 @@
 package raisetech.student.management.contoroller;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.validation.BindingResult;
@@ -17,7 +18,7 @@ import java.util.Arrays;
 import java.util.List;
 
 
-@Controller
+@RestController
 public class StudentController {
 
     private StudentService service;
@@ -31,11 +32,10 @@ public class StudentController {
     }
 
     @GetMapping("/studentList")
-    public String getStudentList(Model model) {
+    public List<StudentDetail> getStudentList() {
         List<Student> students = service.searchStudentList();
         List<StudentCourse> studentCourses = service.searchStudentCourseList();
-        model.addAttribute("studentList", converter.convertStudentdetails(students, studentCourses));
-        return "studentList";
+        return converter.convertStudentdetails(students, studentCourses);
     }
 
 
@@ -54,13 +54,9 @@ public class StudentController {
     }
 
     @PostMapping("/registerStudent")
-    public String registerStudent(@ModelAttribute StudentDetail studentDetail, BindingResult result) {
-        if (result.hasErrors()) {
-            return "registerStudent";
-        }
+    public ResponseEntity<String> registerStudent(@RequestBody StudentDetail studentDetail) {
         service.registerStudent(studentDetail);
-        return "redirect:/studentList";
-
+        return ResponseEntity.ok("登録処理が成功しました");
     }
 
     @GetMapping("/studentsCourseList")
@@ -76,12 +72,9 @@ public class StudentController {
     }
 
     @PostMapping("/updateStudent")
-    public String updateStudent(@ModelAttribute StudentDetail studentDetail, BindingResult result) {
-        if (result.hasErrors()) {
-            return "updateStudent";
-        }
+    public ResponseEntity<String> updateStudent(@RequestBody StudentDetail studentDetail) {
         service.updateStudent(studentDetail);
-        return "redirect:/studentList";
+        return ResponseEntity.ok("更新処理が成功しました");
     }
 }
 
