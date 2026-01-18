@@ -7,29 +7,45 @@ import raisetech.student.management.data.StudentCourse;
 import java.util.List;
 
 /**
- * 受講生情報を扱うリポジトリ
- * 全体検索や単体検索を行えるクラスです。
+ * 受講生テーブルと受講生コース情報テーブルと紐づくRepositoryです。
+ *
  */
 
 
 @Mapper
 public interface StudentRepository {
     /**
-     * 全体検索します。
+     * 受講生の全体検索を行います。
      *
-     * @return 全体検索した受講生情報の一覧
+     * @return 受講生一覧(全件)
      */
     @Select("SELECT * FROM students WHERE isDeleted = false")
     List<Student> studentsearch();
 
+    /**
+     * 受講生の検索を行います。
+     *
+     * @param id　受講生ID
+     * @return 受講生
+     */
     @Select("SELECT * FROM students WHERE id = #{id}")
     Student findStudent(String id);
 
 
+    /**
+     * 受講生のコース情報の全体検索を行います。
+     *
+     * @return 受講生コース情報(全件)
+     */
     @Select("SELECT * FROM students_courses ")
     List<StudentCourse> studentcoursesearch();
 
 
+    /**
+     * 受講生IDに紐づく受講生コース情報を検索します
+     * @param studentId 受講生ID
+     * @return 受講生IDに紐づく受講生コース情報
+     */
     @Select("SELECT * FROM students_courses WHERE id = #{id}")
     List<StudentCourse> searchStudentCourse(String studentId);
 
@@ -42,6 +58,7 @@ public interface StudentRepository {
             "INSERT INTO students_courses(courseId, courseName,courseStart,courseEnd)"
                     + "VALUES(#{courseId},#{courseName},#{courseStart},#{courseEnd})"
     )
+    @Options(useGeneratedKeys = true, keyProperty = "id")
     void registerStudentCourses(StudentCourse studentCourse);
 
     @Update("UPDATE students SET name = #{name}, kanaName = #{kanaName}, nickname = #{nickname},"
