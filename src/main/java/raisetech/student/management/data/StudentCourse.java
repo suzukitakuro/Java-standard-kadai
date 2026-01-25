@@ -5,7 +5,10 @@ import lombok.Setter;
 
 import java.time.LocalDate;
 
-
+/**
+ * 受講生コース譲歩を扱うオブジェクト
+ *
+ */
 
     @Getter
     @Setter
