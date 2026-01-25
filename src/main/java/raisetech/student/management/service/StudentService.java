@@ -38,7 +38,7 @@ public class StudentService {
      */
     @GetMapping("/studentList")
     public List<StudentDetail> searchStudentList() {
-        List<Student> studentList = repository.studentsearch();
+        List<Student> studentList = repository.search();
         List<StudentCourse> studentCourseList = repository.searchStudentCourseList();
         return converter.convertStudentdetails(studentList, studentCourseList);
 
