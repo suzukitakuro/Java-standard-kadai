@@ -3,10 +3,15 @@ package raisetech.student.management.data;
 import lombok.Getter;
 import lombok.Setter;
 
+/**
+ * 受講生を扱うオブジェクト
+ */
 @Getter
 @Setter
 
 public class Student {
+
+
     private String id;
     private String name;
     private String kanaName;
