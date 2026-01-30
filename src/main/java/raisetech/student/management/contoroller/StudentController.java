@@ -1,6 +1,7 @@
 package raisetech.student.management.contoroller;
 
 import jakarta.validation.Valid;
+import jakarta.validation.constraints.NotEmpty;
 import jakarta.validation.constraints.Size;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
@@ -60,7 +61,7 @@ public class StudentController {
      * @return　実行結果
      */
     @PostMapping("/registerStudent")
-    public ResponseEntity<StudentDetail> registerStudent(@RequestBody  StudentDetail studentDetail) {
+    public ResponseEntity<StudentDetail> registerStudent(@RequestBody @Valid StudentDetail studentDetail) {
         StudentDetail responseStudentDetail = service.registerStudent(studentDetail);
         return ResponseEntity.ok(responseStudentDetail);
 

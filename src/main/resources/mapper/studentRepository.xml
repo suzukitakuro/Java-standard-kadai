@@ -17,9 +17,45 @@
     </select>
 
     <!--受講生コース情報の検索 -->
-    <select id="searchStudentCourseList()" resultType="raisetech.student.management.data.Student">
+    <select id="searchStudentCourseList" resultType="raisetech.student.management.data.StudentCourse">
         SELECT *
         FROM students_courses
     </select>
+
+    <!--受講生IDに紐づく受講生コース情報を検索 -->
+    <select id="searchStudentCourse" resultType="raisetech.student.management.data.StudentCourse">
+        SELECT *
+        FROM students_courses
+        WHERE id = #{id}
+    </select>
+
+    <!--受講生の新規登録 -->
+    <insert id="registerStudent" parameterType="raisetech.student.management.data.Student"
+            useGeneratedKeys="true" keyProperty="id">
+        INSERT INTO students(name, kanaName, nickname,email,area,age,sex,remark,isDeleted)
+        VALUES(#{name},#{kanaName},#{nickname},#{email},#{area},#{age},#{sex},#{remark},false)
+    </insert>
+
+    <!--受講生コース情報の新規登録 -->
+    <insert id="registerStudentCourse" parameterType="raisetech.student.management.data.StudentCourse"
+            useGeneratedKeys="true" keyProperty="id">
+        INSERT INTO students_courses(courseId, courseName,courseStart,courseEnd)
+        VALUES(#{courseId},#{courseName},#{courseStart},#{courseEnd})
+
+    </insert>
+
+    <!--受講生の更新-->
+    <update id="updateStudent" parameterType="raisetech.student.management.data.Student">
+        UPDATE students SET
+        name = #{name}, kanaName = #{kanaName}, nickname = #{nickname},
+        email = #{email}, area = #{area}, age = #{age}, sex = #{sex}, remark = #{remark}, isDeleted = #{isDeleted} WHERE id = #{id}
+    </update>
+
+    <!--受講生コース情報の更新-->
+    <update id="updateStudentCourse" parameterType="raisetech.student.management.data.StudentCourse">
+        UPDATE students_courses SET
+        courseName = #{courseName} WHERE id = #{id}"
+    </update>
+
 
 </mapper>
