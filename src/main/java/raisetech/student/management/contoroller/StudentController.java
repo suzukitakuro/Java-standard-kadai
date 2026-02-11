@@ -1,5 +1,8 @@
 package raisetech.student.management.contoroller;
 
+import io.swagger.v3.oas.annotations.Operation;
+import io.swagger.v3.oas.annotations.media.Content;
+import io.swagger.v3.oas.annotations.responses.ApiResponse;
 import jakarta.validation.Valid;
 import jakarta.validation.constraints.Size;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -39,6 +42,7 @@ public class StudentController {
      *
      * @return　受講生詳細一覧(全件)
      */
+    @Operation(summary = "一覧検索", description = "受講生の一覧を検索します。")
     @GetMapping("/studentList")
     public List<StudentDetail> getStudentList() throws TestException {
         throw new TestException("現在このAPIは利用できません、URLは「studentlist」ではなく「student」を利用ください。");
@@ -51,6 +55,7 @@ public class StudentController {
      * @param id 受講生ID
      * @return 受講生
      */
+    @Operation(summary = "受講生検索", description = "IDに紐づく任意の受講生情報を検索します。", responses = {@ApiResponse(responseCode = "200"),@ApiResponse(responseCode = "400",description = "リクエストエラー", content = @Content())})
     @GetMapping("/student/{id}")
     public StudentDetail getStudent(@PathVariable @Size(min = 1, max = 3) String id) {
 
@@ -63,6 +68,8 @@ public class StudentController {
      * @param studentDetail
      * @return　実行結果
      */
+    @Operation(summary = "受講生登録", description = "受講生の登録をします。"
+            , responses = {@ApiResponse(responseCode = "200"),@ApiResponse(responseCode = "400",description = "リクエストエラー", content = @Content())})
     @PostMapping("/registerStudent")
     public ResponseEntity<StudentDetail> registerStudent(@RequestBody @Valid StudentDetail studentDetail) {
         StudentDetail responseStudentDetail = service.registerStudent(studentDetail);
@@ -77,14 +84,17 @@ public class StudentController {
      * @param studentDetail
      * @return　実行結果
      */
+    @Operation(summary = "受講生詳細の更新", description = "受講生詳細の更新をします。",
+            responses = {@ApiResponse(responseCode = "200",description = "更新処理が成功しました"),@ApiResponse(responseCode = "400",description = "リクエストエラー", content = @Content())})
     @PutMapping("/updateStudent")
     public ResponseEntity<String> updateStudent(@RequestBody @Valid StudentDetail studentDetail) {
         service.updateStudent(studentDetail);
         return ResponseEntity.ok("更新処理が成功しました");
     }
 
+
     @ExceptionHandler(TestException.class)
-    public ResponseEntity<String> handleTestException(TestException ex){
+    public ResponseEntity<String> handleTestException(TestException ex) {
         //ログ出力
         return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(ex.getMessage());
     }

@@ -1,5 +1,6 @@
 package raisetech.student.management.controller.converter;
 
+import io.swagger.v3.oas.annotations.Operation;
 import org.springframework.stereotype.Component;
 import raisetech.student.management.data.Student;
 import raisetech.student.management.data.StudentCourse;
@@ -22,6 +23,7 @@ public class StudentConverter {
      * @param studentCourseList 受講生コース情報のリスト
      * @return　受講生詳細情報のリスト
      */
+    @Operation(summary = "受講生詳細コンバーター",description = "受講生に紐づく受講生コース情報をマッピングします。")
     public List<StudentDetail> convertStudentdetails(List<Student> studentList,
         List<StudentCourse> studentCourseList) {
         List<StudentDetail> studentDetails = new ArrayList<>();
