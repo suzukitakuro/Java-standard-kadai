@@ -18,10 +18,9 @@ import java.util.List;
 @AllArgsConstructor
 public class StudentDetail {
 
-    @NotNull
     @Valid
     private Student student;
 
-
+    @Valid
     private List<StudentCourse> studentCourseList;
 }

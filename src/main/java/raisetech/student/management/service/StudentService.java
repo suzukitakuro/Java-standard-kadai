@@ -8,6 +8,8 @@ import raisetech.student.management.controller.converter.StudentConverter;
 import raisetech.student.management.data.Student;
 import raisetech.student.management.data.StudentCourse;
 import raisetech.student.management.domain.StudentDetail;
+import raisetech.student.management.exception.RegistorTestException;
+import raisetech.student.management.exception.TestException;
 import raisetech.student.management.repository.StudentRepository;
 
 import java.time.LocalDate;
@@ -23,6 +25,7 @@ import java.util.List;
 public class StudentService {
     private StudentRepository repository;
     private StudentConverter converter;
+
 
     @Autowired
     public StudentService(StudentRepository repository, StudentConverter converter) {
@@ -66,11 +69,15 @@ public class StudentService {
     @Transactional
     public StudentDetail registerStudent(StudentDetail studentDetail) {
         Student student = studentDetail.getStudent();
+        if ("佐藤和貴".equals(studentDetail.getStudent().getName())) {
+            throw new RegistorTestException("佐藤和貴は生徒として登録できません");
+        }
 
         repository.registerStudent(student);
         studentDetail.getStudentCourseList().forEach(studentCourse -> {
             initStudentsCourse(studentCourse, student);
             repository.registerStudentCourse(studentCourse);
+
         });
         return studentDetail;
 

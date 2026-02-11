@@ -1,14 +1,15 @@
 package raisetech.student.management.contoroller;
 
 import jakarta.validation.Valid;
-import jakarta.validation.constraints.NotEmpty;
 import jakarta.validation.constraints.Size;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
 
 import raisetech.student.management.domain.StudentDetail;
+import raisetech.student.management.exception.TestException;
 import raisetech.student.management.service.StudentService;
 
 
@@ -19,6 +20,7 @@ import java.util.List;
  */
 @Validated
 @RestController
+
 public class StudentController {
 
 
@@ -38,8 +40,8 @@ public class StudentController {
      * @return　受講生詳細一覧(全件)
      */
     @GetMapping("/studentList")
-    public List<StudentDetail> getStudentList() {
-        return service.searchStudentList();
+    public List<StudentDetail> getStudentList() throws TestException {
+        throw new TestException("現在このAPIは利用できません、URLは「studentlist」ではなく「student」を利用ください。");
     }
 
     /**
@@ -50,10 +52,11 @@ public class StudentController {
      * @return 受講生
      */
     @GetMapping("/student/{id}")
-    public StudentDetail getStudent(@PathVariable @Size(min=1, max=3) String id) {
+    public StudentDetail getStudent(@PathVariable @Size(min = 1, max = 3) String id) {
 
         return service.searchStudent(id);
     }
+
     /**
      * 受講生詳細の登録を行います。
      *
@@ -67,6 +70,7 @@ public class StudentController {
 
     }
 
+
     /**
      * 受講生詳細の更新を行います。　キャンセルフラグの更新も行います(論理削除)
      *
@@ -74,9 +78,15 @@ public class StudentController {
      * @return　実行結果
      */
     @PutMapping("/updateStudent")
-    public ResponseEntity<String> updateStudent(@RequestBody StudentDetail studentDetail) {
+    public ResponseEntity<String> updateStudent(@RequestBody @Valid StudentDetail studentDetail) {
         service.updateStudent(studentDetail);
         return ResponseEntity.ok("更新処理が成功しました");
+    }
+
+    @ExceptionHandler(TestException.class)
+    public ResponseEntity<String> handleTestException(TestException ex){
+        //ログ出力
+        return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(ex.getMessage());
     }
 }
 
