@@ -61,10 +61,12 @@ class StudentServiceTest {
         when(repository.searchStudent(id)).thenReturn(student);
         when(repository.searchStudentCourse("1")).thenReturn(studentCourseList);
 
-        sut.searchStudent(id);
+        StudentDetail actual = sut.searchStudent(id);
 
         verify(repository, times(1)).searchStudent(id);
         verify(repository, times(1)).searchStudentCourse("1");
+
+        assertEquals(actual.getStudent().getId(),student.getId());
     }
 
     @Test
@@ -78,10 +80,12 @@ class StudentServiceTest {
         studentDetail.setStudentCourseList(List.of(studentCourse));
 
 
-        sut.registerStudent(studentDetail);
+        StudentDetail actual = sut.registerStudent(studentDetail);
 
         verify(repository, times(1)).registerStudent(student);
         verify(repository, times(1)).registerStudentCourse(studentCourse);
+
+        assertSame(studentDetail,actual);
 
 
     }
