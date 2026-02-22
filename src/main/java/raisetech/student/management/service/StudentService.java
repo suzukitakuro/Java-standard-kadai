@@ -33,6 +33,7 @@ public class StudentService {
         this.converter = converter;
     }
 
+
     /**
      * 受講生一覧検索です
      * 全権検索を行うので、条件指定は行わないものになります。
@@ -90,7 +91,7 @@ public class StudentService {
      * @param student       受講生
      */
 
-    private static void initStudentsCourse(StudentCourse studentCourse, Student student) {
+    void initStudentsCourse(StudentCourse studentCourse, Student student) {
         LocalDate now = LocalDate.now();
         studentCourse.setCourseId(student.getId());
         studentCourse.setCourseStart(now);
