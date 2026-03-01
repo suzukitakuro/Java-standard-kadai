@@ -1,10 +1,9 @@
 package raisetech.student.management.data;
 
+import io.swagger.v3.oas.annotations.Parameter;
 import io.swagger.v3.oas.annotations.media.Schema;
 import jakarta.validation.Valid;
-import jakarta.validation.constraints.Email;
-import jakarta.validation.constraints.NotBlank;
-import jakarta.validation.constraints.NotEmpty;
+import jakarta.validation.constraints.*;
 import lombok.Getter;
 import lombok.Setter;
 
@@ -18,7 +17,9 @@ import lombok.Setter;
 public class Student {
 
 
-
+    @NotBlank
+    @Pattern(regexp = "^\\d+$", message = "数字のみ入力してください。")
+    @Min(value = 1,message ="1以上入力してください。" )
     private String id;
 
     @NotBlank
@@ -31,7 +32,7 @@ public class Student {
     private String nickname;
 
     @NotBlank
-    @Email
+    @Email(message = "メール形式で入力してください。")
     private String email;
 
     @NotBlank
