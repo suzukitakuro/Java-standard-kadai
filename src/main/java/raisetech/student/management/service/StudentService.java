@@ -9,10 +9,10 @@ import raisetech.student.management.data.Student;
 import raisetech.student.management.data.StudentCourse;
 import raisetech.student.management.domain.StudentDetail;
 import raisetech.student.management.exception.RegistorTestException;
-import raisetech.student.management.exception.TestException;
 import raisetech.student.management.repository.StudentRepository;
 
 import java.time.LocalDate;
+import java.time.LocalDateTime;
 import java.util.List;
 
 /**
@@ -76,7 +76,7 @@ public class StudentService {
 
         repository.registerStudent(student);
         studentDetail.getStudentCourseList().forEach(studentCourse -> {
-            initStudentsCourse(studentCourse, student);
+            initStudentsCourse(studentCourse, student.getId());
             repository.registerStudentCourse(studentCourse);
 
         });
@@ -91,11 +91,12 @@ public class StudentService {
      * @param student       受講生
      */
 
-    void initStudentsCourse(StudentCourse studentCourse, Student student) {
-        LocalDate now = LocalDate.now();
-        studentCourse.setCourseId(student.getId());
-        studentCourse.setCourseStart(now);
-        studentCourse.setCourseEnd(now.plusYears(1));
+    void initStudentsCourse(StudentCourse studentCourse, String id) {
+        LocalDateTime now = LocalDateTime.now();
+
+        studentCourse.setId(id);
+        studentCourse.setCourseStartAt(now);
+        studentCourse.setCourseEndAt(now.plusYears(1));
     }
 
     /**
