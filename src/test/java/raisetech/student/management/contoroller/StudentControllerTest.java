@@ -3,11 +3,15 @@ package raisetech.student.management.contoroller;
 import jakarta.validation.ConstraintViolation;
 import jakarta.validation.Validation;
 import jakarta.validation.Validator;
+import org.junit.jupiter.api.MethodOrderer;
 import org.junit.jupiter.api.Test;
+import org.junit.jupiter.api.TestMethodOrder;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.web.servlet.WebMvcTest;
+import org.springframework.http.MediaType;
 import org.springframework.test.context.bean.override.mockito.MockitoBean;
 import org.springframework.test.web.servlet.MockMvc;
+import org.springframework.test.web.servlet.ResultActions;
 import org.springframework.test.web.servlet.request.MockMvcRequestBuilders;
 import raisetech.student.management.data.Student;
 import raisetech.student.management.data.StudentCourse;
@@ -21,6 +25,8 @@ import java.util.Set;
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.mockito.Mockito.*;
+import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
+import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.put;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.content;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 
@@ -38,9 +44,7 @@ class StudentControllerTest {
     @Test
     void 受講生詳細の一覧検索が実行できて空のリストが返ってくること() throws Exception {
         when(service.searchStudentList()).thenReturn(List.of(new StudentDetail()));
-        mockMvc.perform(MockMvcRequestBuilders.get("/studentList"))
-                .andExpect(status().isOk())
-                .andExpect(content().json("[{\"student\":null,\"studentCourseList\":null}]"));
+        mockMvc.perform(MockMvcRequestBuilders.get("/studentList")).andExpect(status().isOk()).andExpect(content().json("[{\"student\":null,\"studentCourseList\":null}]"));
 
 
         verify(service, times(1)).searchStudentList();
@@ -54,9 +58,7 @@ class StudentControllerTest {
         StudentDetail studentDetail = new StudentDetail();
         studentDetail.setStudent(student);
         when(service.searchStudent(id)).thenReturn(studentDetail);
-        mockMvc.perform(MockMvcRequestBuilders.get("/student/{id}", id))
-                .andExpect(status().isOk());
-
+        mockMvc.perform(MockMvcRequestBuilders.get("/student/{id}", id)).andExpect(status().isOk());
 
 
         verify(service, times(1)).searchStudent(id);
@@ -96,8 +98,7 @@ class StudentControllerTest {
         Set<ConstraintViolation<Student>> violations = validator.validate(student);
 
         assertThat(violations.size()).isEqualTo(2);
-        assertThat(violations).extracting("message")
-                .contains("数字のみ入力してください。");
+        assertThat(violations).extracting("message").contains("数字のみ入力してください。");
 
     }
 
@@ -115,9 +116,7 @@ class StudentControllerTest {
         Set<ConstraintViolation<Student>> violations = validator.validate(student);
 
         assertThat(violations.size()).isEqualTo(1);
-        assertThat(violations).extracting("message")
-                .contains("1以上入力してください。");
-
+        assertThat(violations).extracting("message").contains("1以上入力してください。");
 
 
     }
@@ -136,8 +135,7 @@ class StudentControllerTest {
         Set<ConstraintViolation<Student>> violations = validator.validate(student);
 
         assertThat(violations.size()).isEqualTo(1);
-        assertThat(violations).extracting("message")
-                .contains("メール形式で入力してください。");
+        assertThat(violations).extracting("message").contains("メール形式で入力してください。");
 
     }
 
@@ -153,7 +151,76 @@ class StudentControllerTest {
         Set<ConstraintViolation<StudentCourse>> violations = validator.validate(studentcourse);
 
         assertThat(violations.size()).isEqualTo(1);
-        assertThat(violations).extracting("message")
-                .contains("過去の日付を入力しないでください");
+        assertThat(violations).extracting("message").contains("過去の日付を入力しないでください");
     }
+
+    @Test
+    void 受講生詳細の登録が実行できて空で返ってくること() throws Exception {
+        mockMvc.perform(post("/registerStudent").contentType(MediaType.APPLICATION_JSON).content(
+                """
+                     {   
+                        
+                                          "student":{
+                                              "id":"2",
+                                              "name":"牧秀吾",
+                                              "kanaName":"シュウゴマキ",
+                                              "nickname":"まっきー",
+                                              "email":"shuugo.maki@gmail.com",
+                                              "area":"長野県中野市",
+                                              "age":"27",
+                                              "sex":"男",
+                                              "remark":"",
+                                              "isDeleted":"true"
+                        
+                        
+                        
+                                },
+                                "studentCourseList":[
+                                {
+                                    "courseName":"AWSコース"
+                        
+                                }
+                        
+                            ]
+                        
+                        }
+                        """)).andExpect(status().isOk());
+        verify(service, times(1)).registerStudent(any());
+
+
+    }
+
+    @Test
+    void 受講生詳細の更新が実行できて空で返ってくること() throws Exception {
+        mockMvc.perform(put("/updateStudent").contentType(MediaType.APPLICATION_JSON).content("""
+                
+                              {
+                                  "student":{
+                                      "id":"12",
+                                      "name":"牧秀吾",
+                                      "kanaName":"シュウゴマキ",
+                                      "nickname":"まっきー",
+                                      "email":"shuugo.maki@gmail.com",
+                                      "area":"長野県中野市",
+                                      "age":"27",
+                                      "sex":"男",
+                                      "remark":"",
+                                      "isDeleted":"true"
+                
+                
+                                  },
+                                  "studentCourseList":[
+                                  {
+                                  }
+                
+                                  ]
+                
+                              }
+                """)).andExpect(status().isOk());
+        verify(service, times(1)).updateStudent(any());
+
+
+    }
+
+
 }
