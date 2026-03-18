@@ -54,7 +54,7 @@
     <!--受講生コース情報の更新-->
     <update id="updateStudentCourse" parameterType="raisetech.student.management.data.StudentCourse">
         UPDATE students_courses SET
-        courseName = #{courseName} WHERE id = #{id}"
+        courseName = #{courseName} WHERE id = #{id}
     </update>
 
 
