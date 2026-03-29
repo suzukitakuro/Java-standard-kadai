@@ -3,6 +3,7 @@ package raisetech.student.management.repository;
 import org.apache.ibatis.annotations.*;
 import raisetech.student.management.data.Student;
 import raisetech.student.management.data.StudentCourse;
+import raisetech.student.management.domain.StudentSearchCondition;
 
 import java.util.List;
 
@@ -24,10 +25,10 @@ public interface StudentRepository {
     /**
      * 受講生の検索を行います。
      *
-     * @param id 受講生ID
+     * @param condition 受講生条件
      * @return 受講生
      */
-    Student searchStudent(String id);
+    List<Student> searchStudents(StudentSearchCondition condition);
 
 
     /**

@@ -10,12 +10,30 @@
     </select>
 
     <!--受講生の検索 -->
-    <select id="searchStudent" resultType="raisetech.student.management.data.Student">
+    <select id="searchStudents" resultType="raisetech.student.management.data.Student">
         SELECT *
         FROM students
-        WHERE id = #{id}
+        <where>
+            <if test="id != null and id != ''">
+                AND id = #{id}
+            </if>
+            <if test="name != null and name != ''">
+                AND name LIKE CONCAT('%', #{name}, '%')
+            </if>
+            <if test="email != null and email != ''">
+                AND email = #{email}
+            </if>
+            <if test="area != null and area != ''">
+                AND area = #{area}
+            </if>
+            <if test="age != null and age != ''">
+                AND age = #{age}
+            </if>
+            <if test="sex != null and sex != ''">
+                AND sex = #{sex}
+            </if>
+        </where>
     </select>
-
     <!--受講生コース情報の検索 -->
     <select id="searchStudentCourseList" resultType="raisetech.student.management.data.StudentCourse">
         SELECT *
@@ -39,8 +57,8 @@
     <!--受講生コース情報の新規登録 -->
     <insert id="registerStudentCourse" parameterType="raisetech.student.management.data.StudentCourse"
             useGeneratedKeys="true" keyProperty="id">
-        INSERT INTO students_courses(courseId, courseName,courseStart,courseEnd)
-        VALUES(#{courseId},#{courseName},#{courseStart},#{courseEnd})
+        INSERT INTO students_courses(courseId,id,courseName,courseStart,courseEnd)
+        VALUES(#{courseId},#{id},#{courseName},#{courseStartAt},#{courseEndAt})
 
     </insert>
 
@@ -54,7 +72,8 @@
     <!--受講生コース情報の更新-->
     <update id="updateStudentCourse" parameterType="raisetech.student.management.data.StudentCourse">
         UPDATE students_courses SET
-        courseName = #{courseName} WHERE id = #{id}
+        courseName = #{courseName} ,courseId = #{courseId} ,courseStart = #{courseStart},
+        courseEnd = #{courseEnd} ,status = #{status} WHERE id = #{id}
     </update>
 
 
