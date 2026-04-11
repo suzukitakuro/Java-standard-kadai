@@ -4,11 +4,13 @@ import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.Mock;
+import org.mockito.Mockito;
 import org.mockito.junit.jupiter.MockitoExtension;
 import raisetech.student.management.controller.converter.StudentConverter;
 import raisetech.student.management.data.Student;
 import raisetech.student.management.data.StudentCourse;
 import raisetech.student.management.domain.StudentDetail;
+import raisetech.student.management.domain.StudentSearchCondition;
 import raisetech.student.management.repository.StudentRepository;
 
 import java.time.LocalDateTime;
@@ -50,20 +52,22 @@ class StudentServiceTest {
     }
 
     @Test
-    void 受講生詳細の検索＿リポジトリとコンバータの処理が適切によびだされていること() {
+    void 検索条件を指定して様々な条件で受講生を検索こと() {
         StudentService sut = new StudentService(repository, converter);
         Student student = new Student();
-        String id = "1";
-        student.setId(id);
-        List<StudentCourse> studentCourseList = new ArrayList<>();
-        when(repository.searchStudent(id)).thenReturn(student);
-        when(repository.searchStudentCourse(id)).thenReturn(studentCourseList);
+        List<Student> students = List.of(student);
+        List<StudentCourse> courses = new ArrayList<>();
+        String area = "東京";
+        StudentSearchCondition condition = new StudentSearchCondition();
 
-        StudentDetail actual = sut.searchStudent(id);
+        when(repository.searchStudents(condition)).thenReturn(students);
+        when(repository.searchStudentCourse(Mockito.anyInt())).thenReturn(courses);
 
-        verify(repository, times(1)).searchStudent(id);
-        verify(repository, times(1)).searchStudentCourse("1");
-        assertEquals(actual.getStudent().getId(), student.getId());
+        List<StudentDetail> result = sut.searchStudents(condition);
+
+        verify(repository, times(1)).searchStudents(condition);
+        verify(repository, times(1)).searchStudentCourse(anyInt());
+        assertEquals(student.getId(), result.get(0).getStudent().getId());
     }
 
     @Test
@@ -91,7 +95,7 @@ class StudentServiceTest {
     void 受講生詳細の更新＿リポジトリとコンバータの処理が適切によびだされていること() {
         StudentService sut = new StudentService(repository, converter);
         Student student = new Student();
-        student.setId("1");
+        student.setId(1);
         StudentCourse studentCourse = new StudentCourse();
         StudentDetail studentDetail = new StudentDetail();
         studentDetail.setStudent(student);
@@ -109,16 +113,16 @@ class StudentServiceTest {
     @Test
     void 受講生詳細の初期化＿リポジトリとコンバータの処理が適切によびだされていること() {
         StudentService sut = new StudentService(repository, converter);
-        String id = "999";
+        int id = 999;
         Student student = new Student();
         student.setId(id);
         StudentCourse studentCourse = new StudentCourse();
 
         sut.initStudentsCourse(studentCourse, student.getId());
 
-        assertEquals("999", studentCourse.getId());
-        assertEquals(LocalDateTime.now().getHour(),studentCourse.getCourseStartAt().getHour());
-        assertEquals(LocalDateTime.now().plusYears(1).getYear(),studentCourse.getCourseEndAt().getYear());
+        assertEquals(999, studentCourse.getId());
+        assertEquals(LocalDateTime.now().getHour(), studentCourse.getCourseStartAt().getHour());
+        assertEquals(LocalDateTime.now().plusYears(1).getYear(), studentCourse.getCourseEndAt().getYear());
 
 
     }

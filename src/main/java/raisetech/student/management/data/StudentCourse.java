@@ -19,8 +19,8 @@ import java.time.LocalDateTime;
 @Setter
 
 public class StudentCourse {
-    private String courseId;
-    private String id;
+    private int courseId;
+    private int id;
     private String courseName;
     @NotNull
     private LocalDateTime courseStartAt;

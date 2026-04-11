@@ -11,6 +11,7 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
 
+import raisetech.student.management.data.StudentCourse;
 import raisetech.student.management.domain.StudentDetail;
 import raisetech.student.management.domain.StudentSearchCondition;
 import raisetech.student.management.exception.TestException;
@@ -51,7 +52,7 @@ public class StudentController {
 
     /**
      * 受講生検索です
-     * IDに紐づく任意の受講生情報を取得します。
+     * 検索条件を指定して様々な条件で受講生情報を取得します。
      *
      * @param condition 受講生条件
      * @return 受講生
@@ -59,20 +60,15 @@ public class StudentController {
     @Operation(summary = "受講生検索", description = "検索条件を指定して様々な条件で受講生を検索します。", responses = {@ApiResponse(responseCode = "200"), @ApiResponse(responseCode = "400", description = "リクエストエラー", content = @Content())})
     @GetMapping("/students")
     public List<StudentDetail> searchStudents(
-            @RequestParam(required = false) String id,
+            @RequestParam(required = false) Integer id,
             @RequestParam(required = false) String name,
             @RequestParam(required = false) String email,
             @RequestParam(required = false) String area,
             @RequestParam(required = false) Integer age,
             @RequestParam(required = false) String sex) {
 
-        StudentSearchCondition condition = new StudentSearchCondition();
-        condition.setId(id);
-        condition.setName(name);
-        condition.setEmail(email);
-        condition.setArea(area);
-        condition.setAge(age);
-        condition.setSex(sex);
+        StudentSearchCondition condition =
+                new StudentSearchCondition(id, name, email, area, age, sex);
 
         return service.searchStudents(condition);
     }
@@ -110,8 +106,16 @@ public class StudentController {
 
     @ExceptionHandler(TestException.class)
     public ResponseEntity<String> handleTestException(TestException ex) {
-        //ログ出力
         return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(ex.getMessage());
+    }
+
+    @PutMapping("/updateStudentCourseStatus")
+    public ResponseEntity<String> updateStudentCourseStatus(@RequestBody StudentCourse request) {
+        service.updateStudentCourseStatus(
+                request.getId(),
+                request.getStatus()
+        );
+        return ResponseEntity.ok("コースステータス更新");
     }
 }
 

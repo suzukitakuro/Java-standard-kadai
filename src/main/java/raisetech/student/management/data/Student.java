@@ -17,8 +17,8 @@ import lombok.Setter;
 public class Student {
 
 
-
-    private String id;
+    @Min(value = 1, message = "1以上入力してください。")
+    private int id;
 
     @NotBlank
     private String name;

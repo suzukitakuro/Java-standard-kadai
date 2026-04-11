@@ -57,8 +57,8 @@
     <!--受講生コース情報の新規登録 -->
     <insert id="registerStudentCourse" parameterType="raisetech.student.management.data.StudentCourse"
             useGeneratedKeys="true" keyProperty="id">
-        INSERT INTO students_courses(courseId,id,courseName,courseStart,courseEnd)
-        VALUES(#{courseId},#{id},#{courseName},#{courseStartAt},#{courseEndAt})
+        INSERT INTO students_courses(courseId,id,courseName,courseStartAt,courseEndAt,status)
+        VALUES(#{courseId},#{id},#{courseName},#{courseStartAt},#{courseEndAt},#{status})
 
     </insert>
 
@@ -71,9 +71,19 @@
 
     <!--受講生コース情報の更新-->
     <update id="updateStudentCourse" parameterType="raisetech.student.management.data.StudentCourse">
+           UPDATE students_courses SET
+        courseName = #{courseName},
+        courseId = #{courseId},
+        courseStartAt = #{courseStartAt},
+        courseEndAt = #{courseEndAt},
+        status = #{status}
+        WHERE id = #{id}
+    </update>
+
+    <!--受講生コースのステータスの更新-->
+    <update id="updateStudentCourseStatus">
         UPDATE students_courses SET
-        courseName = #{courseName} ,courseId = #{courseId} ,courseStart = #{courseStart},
-        courseEnd = #{courseEnd} ,status = #{status} WHERE id = #{id}
+        status = #{status} WHERE id = #{id}
     </update>
 
 

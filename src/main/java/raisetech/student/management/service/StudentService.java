@@ -97,7 +97,7 @@ public class StudentService {
      * @param student       受講生
      */
 
-    void initStudentsCourse(StudentCourse studentCourse, String id) {
+    void initStudentsCourse(StudentCourse studentCourse, int id) {
         LocalDateTime now = LocalDateTime.now();
 
         studentCourse.setId(id);
@@ -116,4 +116,11 @@ public class StudentService {
         studentDetail.getStudentCourseList()
                 .forEach(studentCourse -> repository.updateStudentCourse(studentCourse));
     }
+
+    @Transactional
+    public void updateStudentCourseStatus(int id, String status) {
+        repository.updateStudentCourseStatus(id, status);
+    }
+
+
 }
