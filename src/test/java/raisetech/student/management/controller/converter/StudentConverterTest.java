@@ -37,10 +37,10 @@ class StudentConverterTest {
 
     @Test
     void 受講生に紐づく受講生コース情報をマッピングできること() throws Exception{
-        String id = "555";
+        int id = 555;
         Student student = new Student();
         student.setId(id);
-        String courseId = "913";
+        int courseId = 913;
         StudentCourse studentCourse = new StudentCourse();
         studentCourse.setCourseId(courseId);
         studentCourse.setId(id);
@@ -65,7 +65,7 @@ class StudentConverterTest {
 
     @Test
     void 受講生コース情報がない空のリストが作られること() throws Exception{
-        String id = "333";
+        int id = 333;
         Student student = new Student();
         student.setId(id);
 

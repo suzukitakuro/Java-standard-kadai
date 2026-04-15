@@ -2,11 +2,11 @@ package raisetech.student.management.data;
 
 import io.swagger.v3.oas.annotations.media.Schema;
 import jakarta.validation.constraints.Future;
-import jakarta.validation.constraints.Past;
+import jakarta.validation.constraints.NotEmpty;
+import jakarta.validation.constraints.NotNull;
 import lombok.Getter;
 import lombok.Setter;
 
-import java.time.LocalDate;
 import java.time.LocalDateTime;
 
 /**
@@ -19,12 +19,16 @@ import java.time.LocalDateTime;
 @Setter
 
 public class StudentCourse {
-    private String courseId;
-    private String id;
+    private int courseId;
+    private int id;
     private String courseName;
+    @NotNull
     private LocalDateTime courseStartAt;
+    @NotNull
     @Future(message = "過去の日付を入力しないでください")
     private LocalDateTime courseEndAt;
+    @NotEmpty
+    private String status;
 
 }
 

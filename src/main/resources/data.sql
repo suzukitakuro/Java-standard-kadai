@@ -12,7 +12,7 @@ VALUES
 ('野島亮','ノジマリョウ','エリート','elite@gmail.com','神奈川県横浜市',29,'男');
 
 
-INSERT INTO students_courses (courseName,courseStart,courseEnd,id)
+INSERT INTO students_courses (courseName,courseStartAt,courseEndAt,id)
 VALUES
 ('AWSコース','2026-01-31 00:00:00','2027-01-31 00:00:00','1'),
 ('Javaコース','2026-01-31 00:00:00','2027-01-31 00:00:00','2'),

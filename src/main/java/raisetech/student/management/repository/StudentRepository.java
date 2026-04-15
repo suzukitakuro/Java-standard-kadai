@@ -3,6 +3,7 @@ package raisetech.student.management.repository;
 import org.apache.ibatis.annotations.*;
 import raisetech.student.management.data.Student;
 import raisetech.student.management.data.StudentCourse;
+import raisetech.student.management.domain.StudentSearchCondition;
 
 import java.util.List;
 
@@ -24,10 +25,10 @@ public interface StudentRepository {
     /**
      * 受講生の検索を行います。
      *
-     * @param id 受講生ID
+     * @param condition 受講生条件
      * @return 受講生
      */
-    Student searchStudent(String id);
+    List<Student> searchStudents(StudentSearchCondition condition);
 
 
     /**
@@ -44,7 +45,7 @@ public interface StudentRepository {
      * @param studentId 受講生ID
      * @return 受講生IDに紐づく受講生コース情報
      */
-    List<StudentCourse> searchStudentCourse(String studentId);
+    List<StudentCourse> searchStudentCourse(int studentId);
 
     /**
      * 受講生を新規登録します。 IDに関しては自動採番を行う。
@@ -76,8 +77,14 @@ public interface StudentRepository {
      * @param studentCourse 受講生コース情報
      *
      */
-        void updateStudentCourse(StudentCourse studentCourse);
+    void updateStudentCourse(StudentCourse studentCourse);
 
-
+     /**
+ * 受講生コース情報のステータスを更新します。
+ *
+ *
+ *
+ */
+     void updateStudentCourseStatus(int id ,String status);
 }
 

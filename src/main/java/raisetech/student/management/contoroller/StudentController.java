@@ -11,7 +11,9 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
 
+import raisetech.student.management.data.StudentCourse;
 import raisetech.student.management.domain.StudentDetail;
+import raisetech.student.management.domain.StudentSearchCondition;
 import raisetech.student.management.exception.TestException;
 import raisetech.student.management.service.StudentService;
 
@@ -50,16 +52,25 @@ public class StudentController {
 
     /**
      * 受講生検索です
-     * IDに紐づく任意の受講生情報を取得します。
+     * 検索条件を指定して様々な条件で受講生情報を取得します。
      *
-     * @param id 受講生ID
+     * @param condition 受講生条件
      * @return 受講生
      */
-    @Operation(summary = "受講生検索", description = "IDに紐づく任意の受講生情報を検索します。", responses = {@ApiResponse(responseCode = "200"),@ApiResponse(responseCode = "400",description = "リクエストエラー", content = @Content())})
-    @GetMapping("/student/{id}")
-    public StudentDetail getStudent(@PathVariable @Size(min = 1, max = 3) String id) {
+    @Operation(summary = "受講生検索", description = "検索条件を指定して様々な条件で受講生を検索します。", responses = {@ApiResponse(responseCode = "200"), @ApiResponse(responseCode = "400", description = "リクエストエラー", content = @Content())})
+    @GetMapping("/students")
+    public List<StudentDetail> searchStudents(
+            @RequestParam(required = false) Integer id,
+            @RequestParam(required = false) String name,
+            @RequestParam(required = false) String email,
+            @RequestParam(required = false) String area,
+            @RequestParam(required = false) Integer age,
+            @RequestParam(required = false) String sex) {
 
-        return service.searchStudent(id);
+        StudentSearchCondition condition =
+                new StudentSearchCondition(id, name, email, area, age, sex);
+
+        return service.searchStudents(condition);
     }
 
     /**
@@ -69,7 +80,7 @@ public class StudentController {
      * @return　実行結果
      */
     @Operation(summary = "受講生登録", description = "受講生の登録をします。"
-            , responses = {@ApiResponse(responseCode = "200"),@ApiResponse(responseCode = "400",description = "リクエストエラー", content = @Content())})
+            , responses = {@ApiResponse(responseCode = "200"), @ApiResponse(responseCode = "400", description = "リクエストエラー", content = @Content())})
     @PostMapping("/registerStudent")
     public ResponseEntity<StudentDetail> registerStudent(@RequestBody @Valid StudentDetail studentDetail) {
         StudentDetail responseStudentDetail = service.registerStudent(studentDetail);
@@ -85,7 +96,7 @@ public class StudentController {
      * @return　実行結果
      */
     @Operation(summary = "受講生詳細の更新", description = "受講生詳細の更新をします。",
-            responses = {@ApiResponse(responseCode = "200",description = "更新処理が成功しました"),@ApiResponse(responseCode = "400",description = "リクエストエラー", content = @Content())})
+            responses = {@ApiResponse(responseCode = "200", description = "更新処理が成功しました"), @ApiResponse(responseCode = "400", description = "リクエストエラー", content = @Content())})
     @PutMapping("/updateStudent")
     public ResponseEntity<String> updateStudent(@RequestBody @Valid StudentDetail studentDetail) {
         service.updateStudent(studentDetail);
@@ -95,8 +106,16 @@ public class StudentController {
 
     @ExceptionHandler(TestException.class)
     public ResponseEntity<String> handleTestException(TestException ex) {
-        //ログ出力
         return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(ex.getMessage());
+    }
+
+    @PutMapping("/updateStudentCourseStatus")
+    public ResponseEntity<String> updateStudentCourseStatus(@RequestBody StudentCourse request) {
+        service.updateStudentCourseStatus(
+                request.getId(),
+                request.getStatus()
+        );
+        return ResponseEntity.ok("コースステータス更新");
     }
 }
 

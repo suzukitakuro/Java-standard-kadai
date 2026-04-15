@@ -8,10 +8,10 @@ import raisetech.student.management.controller.converter.StudentConverter;
 import raisetech.student.management.data.Student;
 import raisetech.student.management.data.StudentCourse;
 import raisetech.student.management.domain.StudentDetail;
+import raisetech.student.management.domain.StudentSearchCondition;
 import raisetech.student.management.exception.RegistorTestException;
 import raisetech.student.management.repository.StudentRepository;
 
-import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.util.List;
 
@@ -50,15 +50,21 @@ public class StudentService {
 
     /**
      * 受講生詳細検索です。
-     * IDに紐づく受講生情報を取得した後、その受講生に紐づく受講生コース情報を取得し、設定します。
+     * 検索条件を指定して様々な条件で受講生を検索します。
      *
-     * @param id 受講生ID
+     * @param condition 複数検索
      * @return　受講生詳細
      */
-    public StudentDetail searchStudent(String id) {
-        Student student = repository.searchStudent(id);
-        List<StudentCourse> studentCourseList = repository.searchStudentCourse(student.getId());
-        return new StudentDetail(student, studentCourseList);
+    public List<StudentDetail> searchStudents(StudentSearchCondition condition) {
+        List<Student> students = repository.searchStudents(condition);
+
+        return students.stream()
+                .map(student -> {
+                    List<StudentCourse> courses =
+                            repository.searchStudentCourse(student.getId());
+                    return new StudentDetail(student, courses);
+                })
+                .toList();
     }
 
     /**
@@ -91,7 +97,7 @@ public class StudentService {
      * @param student       受講生
      */
 
-    void initStudentsCourse(StudentCourse studentCourse, String id) {
+    void initStudentsCourse(StudentCourse studentCourse, int id) {
         LocalDateTime now = LocalDateTime.now();
 
         studentCourse.setId(id);
@@ -110,4 +116,11 @@ public class StudentService {
         studentDetail.getStudentCourseList()
                 .forEach(studentCourse -> repository.updateStudentCourse(studentCourse));
     }
+
+    @Transactional
+    public void updateStudentCourseStatus(int id, String status) {
+        repository.updateStudentCourseStatus(id, status);
+    }
+
+
 }
